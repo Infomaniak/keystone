@@ -197,7 +197,7 @@ class S3ContribCore(test_v3.RestfulTestCase):
                     'token': base64.b64encode(b'string to sign').strip(),
                 }
             },
-            expected_status=http.client.UNAUTHORIZED,
+            expected_status=http.client.FORBIDDEN,
         )
 
     def test_bad_credential_type(self):
@@ -255,7 +255,7 @@ class S3ContribCore(test_v3.RestfulTestCase):
         }
 
         self.assertRaises(
-            exception.Unauthorized,
+            exception.Forbidden,
             s3tokens.S3Resource._check_signature,
             creds_ref,
             credentials,
@@ -318,7 +318,7 @@ class S3ContribCore(test_v3.RestfulTestCase):
         }
 
         self.assertRaises(
-            exception.Unauthorized,
+            exception.Forbidden,
             s3tokens.S3Resource._check_signature,
             creds_ref,
             credentials,
@@ -337,7 +337,7 @@ class S3ContribCore(test_v3.RestfulTestCase):
         }
 
         self.assertRaises(
-            exception.Unauthorized,
+            exception.Forbidden,
             s3tokens.S3Resource._check_signature,
             creds_ref,
             credentials,
@@ -356,7 +356,7 @@ class S3ContribCore(test_v3.RestfulTestCase):
         }
 
         self.assertRaises(
-            exception.Unauthorized,
+            exception.Forbidden,
             s3tokens.S3Resource._check_signature,
             creds_ref,
             credentials,
@@ -375,7 +375,7 @@ class S3ContribCore(test_v3.RestfulTestCase):
         }
 
         self.assertRaises(
-            exception.Unauthorized,
+            exception.Forbidden,
             s3tokens.S3Resource._check_signature,
             creds_ref,
             credentials,
@@ -386,7 +386,7 @@ class S3ContribCore(test_v3.RestfulTestCase):
         # token has invalid format of first part
         credentials = {'token': 'QVdTNC1BQUEKWApYClg=', 'signature': ''}
         self.assertRaises(
-            exception.Unauthorized,
+            exception.Forbidden,
             s3tokens.S3Resource._check_signature,
             creds_ref,
             credentials,
@@ -398,7 +398,7 @@ class S3ContribCore(test_v3.RestfulTestCase):
             'signature': '',
         }
         self.assertRaises(
-            exception.Unauthorized,
+            exception.Forbidden,
             s3tokens.S3Resource._check_signature,
             creds_ref,
             credentials,

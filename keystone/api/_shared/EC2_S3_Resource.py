@@ -60,13 +60,13 @@ class ResourceBase(ks_flask.ResourceBase):
             timestamp = timeutils.parse_isotime(timestamp)
             timestamp = timeutils.normalize_time(timestamp)
         except Exception as e:
-            raise ks_exceptions.Unauthorized(
+            raise ks_exceptions.Forbidden(
                 _('Credential timestamp is invalid: %s') % e
             )
         auth_ttl = datetime.timedelta(minutes=CONF.credential.auth_ttl)
         current_time = timeutils.normalize_time(timeutils.utcnow())
         if current_time > timestamp + auth_ttl:
-            raise ks_exceptions.Unauthorized(_('Credential is expired'))
+            raise ks_exceptions.Forbidden(_('Credential is expired'))
 
     def handle_authenticate(self):
         # Fail closed if the ec2credential marker method is not enabled:
@@ -111,7 +111,7 @@ class ResourceBase(ks_flask.ResourceBase):
             credentials = {}
 
         if 'access' not in credentials:
-            raise ks_exceptions.Unauthorized(_('EC2 Signature not supplied'))
+            raise ks_exceptions.Forbidden(_('EC2 Signature not supplied'))
 
         # Load the credential from the backend
         credential_id = utils.hash_access_key(credentials['access'])
@@ -158,7 +158,7 @@ class ResourceBase(ks_flask.ResourceBase):
                 project_id=project_ref['id'], project=project_ref
             )
         except AssertionError as e:
-            raise ks_exceptions.Unauthorized from e
+            raise ks_exceptions.Forbidden from e
 
         self._check_timestamp(credentials)
 
@@ -183,7 +183,7 @@ class ResourceBase(ks_flask.ResourceBase):
             )
             roles = [r['id'] for r in app_cred['roles']]
             if cred_data['project_id'] != app_cred['project_id']:
-                raise ks_exceptions.Unauthorized(
+                raise ks_exceptions.Forbidden(
                     _(
                         'EC2 credential project does not match the '
                         'application credential project.'
@@ -195,7 +195,7 @@ class ResourceBase(ks_flask.ResourceBase):
             )
             roles = jsonutils.loads(access_token['role_ids'])
             if cred_data['project_id'] != access_token['project_id']:
-                raise ks_exceptions.Unauthorized(
+                raise ks_exceptions.Forbidden(
                     _(
                         'EC2 credential project does not match the '
                         'OAuth1 access token project.'
@@ -208,7 +208,7 @@ class ResourceBase(ks_flask.ResourceBase):
             )
 
         if not roles:
-            raise ks_exceptions.Unauthorized(_('User not valid for project.'))
+            raise ks_exceptions.Forbidden(_('User not valid for project.'))
 
         for r_id in roles:
             # Assert all roles exist.

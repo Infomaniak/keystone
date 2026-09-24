@@ -56,10 +56,10 @@ class EC2TokensResource(EC2_S3_Resource.ResourceBase):
                 signature = signer.generate(credentials)
                 if utils.auth_str_equal(credentials['signature'], signature):
                     return True
-            raise exception.Unauthorized(_('Invalid EC2 signature.'))
+            raise exception.Forbidden(_('Invalid EC2 signature.'))
         # Raise the exception when credentials.get('signature') is None
         else:
-            raise exception.Unauthorized(_('EC2 signature not supplied.'))
+            raise exception.Forbidden(_('EC2 signature not supplied.'))
 
     def post(self):
         """Authenticate ec2 token.

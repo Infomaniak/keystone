@@ -150,7 +150,7 @@ class EC2ContribCoreV3(test_v3.RestfulTestCase):
     def test_authenticate_without_request_body_returns_bad_request(self):
         self.post('/ec2tokens', expected_status=http.client.BAD_REQUEST)
 
-    def test_authenticate_without_proper_secret_returns_unauthorized(self):
+    def test_authenticate_without_proper_secret_returns_forbidden(self):
         signer = ec2_utils.Ec2Signer('totally not the secret')
         timestamp = utils.isotime(timeutils.utcnow())
         credentials = {
@@ -169,7 +169,7 @@ class EC2ContribCoreV3(test_v3.RestfulTestCase):
         self.post(
             '/ec2tokens',
             body={'credentials': credentials},
-            expected_status=http.client.UNAUTHORIZED,
+            expected_status=http.client.FORBIDDEN,
         )
 
     def test_authenticate_expired_request(self):
@@ -193,7 +193,7 @@ class EC2ContribCoreV3(test_v3.RestfulTestCase):
         self.post(
             '/ec2tokens',
             body={'credentials': credentials},
-            expected_status=http.client.UNAUTHORIZED,
+            expected_status=http.client.FORBIDDEN,
         )
 
     def test_authenticate_expired_request_v4(self):
@@ -235,7 +235,7 @@ class EC2ContribCoreV3(test_v3.RestfulTestCase):
         self.post(
             '/ec2tokens',
             body={'credentials': credentials},
-            expected_status=http.client.UNAUTHORIZED,
+            expected_status=http.client.FORBIDDEN,
         )
 
     def test_valid_ec2_token_invalid_for_regular_endpoints(self, **kwargs):

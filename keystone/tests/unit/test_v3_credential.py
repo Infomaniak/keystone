@@ -1187,7 +1187,7 @@ class TestCredentialAppCreds(CredentialBaseTestCase):
             '/ec2tokens',
             body={'ec2Credentials': sig_ref},
             token=token,
-            expected_status=http.client.UNAUTHORIZED,
+            expected_status=http.client.FORBIDDEN,
         )
 
     def test_app_cred_token_cannot_list_totp_credentials(self):
@@ -1475,7 +1475,7 @@ class TestCredentialAccessToken(CredentialBaseTestCase):
             '/ec2tokens',
             body={'ec2Credentials': self._get_ec2_sig_ref(blob)},
             token=token,
-            expected_status=http.client.UNAUTHORIZED,
+            expected_status=http.client.FORBIDDEN,
         )
 
 
